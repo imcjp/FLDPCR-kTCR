@@ -1,18 +1,17 @@
 @echo off
 setlocal
 
-:: Step 1: 检查是否已安装 Python
+:: Step 1: Check if Python is installed
 where python >nul 2>nul
 if %errorlevel% neq 0 (
-    echo Python 未安装，请安装 Python。
-    echo 请访问 https://www.python.org/downloads/ 下载并安装 Python。
+    echo Python is not installed. Please install Python.
+    echo Please visit https://www.python.org/downloads/ to download and install Python.
     exit /b 1
 )
 
+:: Step 2: Create virtual environment
 
-:: Step 2: 创建虚拟环境
-
-:: 解析参数
+:: Parse parameters
 set force=0
 if "%1"=="-f" (
     set force=1
@@ -20,53 +19,53 @@ if "%1"=="-f" (
 
 if exist "venv" (
     if %force%==1 (
-        echo 强制删除现有虚拟环境...
+        echo Forcing removal of existing virtual environment...
         rmdir /s /q venv
         if %errorlevel% neq 0 (
-            echo 删除虚拟环境失败，请检查错误信息。
+            echo Failed to remove the virtual environment. Please check the error message.
             exit /b 1
         )
     ) else (
-        echo 虚拟环境 'venv' 已存在。
+        echo Virtual environment 'venv' already exists.
     )
 )
 
 if not exist "venv" (
-    echo 正在创建虚拟环境...
+    echo Creating virtual environment...
     python -m venv venv
     if %errorlevel% neq 0 (
-        echo 创建虚拟环境失败，请检查错误信息。
+        echo Failed to create virtual environment. Please check the error message.
         exit /b 1
     )
-    echo 虚拟环境创建成功。
+    echo Virtual environment created successfully.
 )
 
-:: Step 3: 检查虚拟环境的激活脚本是否存在
+:: Step 3: Check if the activation script for the virtual environment exists
 if not exist "venv\Scripts\activate" (
-    echo 警告：找不到虚拟环境的激活脚本 'venv\Scripts\activate'，请检查虚拟环境是否正确创建。
+    echo Warning: The activation script 'venv\Scripts\activate' could not be found. Please check if the virtual environment was created correctly.
     exit /b 1
 )
 
-:: Step 4: 激活虚拟环境
-echo 正在激活虚拟环境...
+:: Step 4: Activate virtual environment
+echo Activating virtual environment...
 call venv\Scripts\activate.bat
 
-:: Step 5: 安装 requirements.txt 中的 Python 包
+:: Step 5: Install Python packages from requirements.txt
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 if exist requirements.txt (
-    echo 正在安装 requirements.txt 中的依赖...
+    echo Installing dependencies from requirements.txt...
     pip install -r requirements.txt
     if %errorlevel% neq 0 (
-        echo 安装依赖失败，请检查错误信息。
+        echo Failed to install dependencies. Please check the error message.
         exit /b 1
     )
 ) else (
-    echo 未找到 requirements.txt，跳过安装依赖步骤。
+    echo requirements.txt not found, skipping dependency installation.
 )
 
-echo 安装完成，所有步骤成功执行。
+echo Installation complete, all steps executed successfully.
 
-echo 测试streamlit，若streamlit能够正常启动，请按Ctrl+z或Ctrl+c退出即可
+echo Testing streamlit. If streamlit starts correctly, press Ctrl+z or Ctrl+c to exit.
 streamlit run frontEnd.py
 
 endlocal
