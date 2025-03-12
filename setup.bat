@@ -65,7 +65,4 @@ if exist requirements.txt (
 
 echo Installation complete, all steps executed successfully.
 
-echo Testing streamlit. If streamlit starts correctly, press Ctrl+z or Ctrl+c to exit.
-streamlit run frontEnd.py
-
 endlocal
