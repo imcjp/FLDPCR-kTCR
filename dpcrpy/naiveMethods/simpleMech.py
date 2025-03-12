@@ -18,29 +18,31 @@
 ##########################################################################
 import numpy as np
 from dpcrpy.framework.dpcrMech import DpcrMech
+
+
 class SimpleMech(DpcrMech):
-    def __init__(self,T=1,noiMech=None,isInit=True):
-        self.T=T;
+    def __init__(self, T=1, noiMech=None, isInit=True):
+        self.T = T;
         self.setNoiMech(noiMech)
         if isInit:
             self.init();
-        
+
     def getL1Sens(self):
         return self.T;
-    
+
     def getL2Sens(self):
         return np.sqrt(self.T);
-    
+
     def init(self):
-        self.t=0;
+        self.t = 0;
         return self
-        
-    def dpRelease(self,x):
-        if self.t==0:
+
+    def dpRelease(self, x):
+        if self.t == 0:
             self.sNoi = [self.noiMech.genNoise() for i in range(self.T)];
-        for i in range(self.t,self.T):
-            self.sNoi[i]+=x;
-        res=self.sNoi[self.t];
-        self.t+=1;
-        mse=self.noiMech.getMse();
-        return (res,mse)
+        for i in range(self.t, self.T):
+            self.sNoi[i] += x;
+        res = self.sNoi[self.t];
+        self.t += 1;
+        mse = self.noiMech.getMse();
+        return (res, mse)

@@ -83,7 +83,7 @@ if __name__ == '__main__':
             'C': 1,  # Percentage of participants participating in training per communication round
             'K': 20,  # Number of participants
             # Maximum communication rounds. It may be less than actual communication rounds due to exhaustion of privacy budget.
-            'R': 50,
+            'R': 1000,
             'E': 100,  # Internal iteration number
             'sample_rate': 0.01,  # Sampling rate of each iteration
         },

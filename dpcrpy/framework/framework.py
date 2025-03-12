@@ -17,48 +17,51 @@
 ##########################################################################
 
 import warnings
+
+
 class dpCrFw:
-    def __init__(self,genBlk,newBlkCallback=None):
-        self.genBlk=genBlk;
-        self.blkId=0;
-        self.t=0;
-        self.blk=None;
-        self.j=0;
-        self.lastRs=0;
-        self.lastMse=0;
-        self.cumSum=0;
-        self.cumMse=0;
-        self.lastRes=0;
-        self.newBlkCallback=newBlkCallback;
-    def initRelease(self,x):
-        if self.t==0:
-            self.lastRs=x
+    def __init__(self, genBlk, newBlkCallback=None):
+        self.genBlk = genBlk;
+        self.blkId = 0;
+        self.t = 0;
+        self.blk = None;
+        self.j = 0;
+        self.lastRs = 0;
+        self.lastMse = 0;
+        self.cumSum = 0;
+        self.cumMse = 0;
+        self.lastRes = 0;
+        self.newBlkCallback = newBlkCallback;
+
+    def initRelease(self, x):
+        if self.t == 0:
+            self.lastRs = x
             self.lastRes = x
         else:
             warnings('InitRelease should be executed before the first release. The execution is aborted!')
 
-    def dpRelease(self,x):
-        if (self.blk is None) or self.blk.size()==self.j:
-            self.blkId+=1;
-            self.blk=self.genBlk(self.blkId);
-            self.j=0;
-            self.cumSum+=self.lastRs;
-            self.cumMse+=self.lastMse;
+    def dpRelease(self, x):
+        if (self.blk is None) or self.blk.size() == self.j:
+            self.blkId += 1;
+            self.blk = self.genBlk(self.blkId);
+            self.j = 0;
+            self.cumSum += self.lastRs;
+            self.cumMse += self.lastMse;
             if not self.newBlkCallback is None:
-                self.newBlkCallback(self.blkId,self.blk,self.cumMse,self.cumSum);
-        (self.lastRs,self.lastMse)=self.blk.dpRelease(x);
-        res=self.cumSum+self.lastRs
-        noiX=res-self.lastRes;
-        self.lastRes=res;
+                self.newBlkCallback(self.blkId, self.blk, self.cumMse, self.cumSum);
+        (self.lastRs, self.lastMse) = self.blk.dpRelease(x);
+        res = self.cumSum + self.lastRs
+        noiX = res - self.lastRes;
+        self.lastRes = res;
         if self.lastMse is None:
-            mse=None
+            mse = None
         else:
-            mse=self.cumMse+self.lastMse;
-        self.t+=1;
-        self.j+=1;
-        return (res,noiX,mse)
+            mse = self.cumMse + self.lastMse;
+        self.t += 1;
+        self.j += 1;
+        return (res, noiX, mse)
 
     def __str__(self):
-        res=(f'已经发布了{self.t}次\n');
-        res+=(f'当前块是{self.blkId}块，该块已经发布了{self.j}次')
+        res = (f'Published {self.t} times\n')
+        res += (f'The current block is block {self.blkId}, and it has been published {self.j} times')
         return res;
