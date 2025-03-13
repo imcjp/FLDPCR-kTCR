@@ -16,7 +16,15 @@ The source code requires **Python 3**. A list of required packages is detailed i
 - `tqdm`
 - `opacus`
 
-### Instructions
+#### Running Instructions:
+
+1. Download and unzip our repository. Assume the repository is extracted into the `FLDPCR-kTCR-main` folder.
+2. Install the environment: Simply run `setup.bat` (on Windows), which will create a Python virtual environment located in the `FLDPCR-kTCR-main\venv` folder.
+3. Activate the `venv` environment, then open the `main.m` script. Set the parameters in the `config` file according to the user's needs, following the guidance provided within `main.m`.
+4. After configuring the parameters, run `python main.m` to execute the code and conduct the experiment.
+
+
+### About
 
 1. The proposed kTCR model is implemented in the [**ktcr**](dpcrpy/treeMethods/ktcr) module.
 2. The kTCR model is designed based on the theory of k-ary numbers, which is implemented in [**kary_math.py**](dpcrpy/treeMethods/ktcr/utils/kary_math.py). For detailed explanations, refer to [**kary_math.md**](dpcrpy/treeMethods/ktcr/utils/kary_math.md).
