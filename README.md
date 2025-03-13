@@ -1,9 +1,9 @@
 # FLDPCR-kTCR
 ### Code for "Enhancing Federated Learning with Differentially Private Continuous Data Release via $k$-Ary Trees"
 
-This repository contains the code for the paper **"Enhancing Federated Learning with Differentially Private Continuous Data Release via $k$-Ary Trees"**. In this work, we propose a novel differential privacy continuous data release (DPCR) model, called the $k$-ary tree-based DPCR (kTCR) model.
+This repository contains the code for the paper **"Enhancing Federated Learning with Differentially Private Continuous Data Release via $k$-Ary Trees"**. In this work, we propose a novel **differentially private continuous data release (DPCR)** model, called the $k$-ary tree-based DPCR (kTCR) model.
 
-Our approach leverages the open-sourced [**FLDPCR framework**](https://github.com/imcjp/FLDPCR), building upon it to introduce $k$-ary trees for constructing the release strategy. We further improve the model's performance by minimizing errors using Variance Optimal Estimation (VOE) and privacy budget allocation algorithms. The kTCR model significantly enhances learning accuracy compared to state-of-the-art DPCR models.
+Our approach leverages the open-sourced [**FLDPCR framework**](https://github.com/imcjp/FLDPCR), building upon it to introduce $k$-ary trees for constructing the release strategy. We further improve the model's performance by minimizing errors using **Variance Optimal Estimation (VOE)** and **privacy budget allocation algorithms**. The kTCR model significantly enhances learning accuracy compared to state-of-the-art DPCR models.
 
 ### Requirements
 
