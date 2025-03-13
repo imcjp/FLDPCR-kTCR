@@ -19,8 +19,8 @@ The source code requires **Python 3**. A list of required packages is detailed i
 #### Running Instructions:
 
 1. Download and unzip our repository. Assume the repository is extracted into the `FLDPCR-kTCR-main` folder.
-2. Install the environment: Simply run `[**setup.bat**](setup.bat)` (on Windows), which will create a Python virtual environment located in the `FLDPCR-kTCR-main\venv` folder.
-3. Activate the `venv` environment, then open the `[**main.m**](main.m)` script. Set the parameters in the `config` file according to the user's needs, following the guidance provided within `main.m`.
+2. Install the environment: Simply run [**setup.bat**](setup.bat) (on Windows), which will create a Python virtual environment located in the `FLDPCR-kTCR-main\venv` folder.
+3. Activate the `venv` environment, then open the [**main.m**](main.m) script. Set the parameters in the `config` file according to the user's needs, following the guidance provided within `main.m`.
 4. After configuring the parameters, run `python main.m` to execute the code and conduct the experiment.
 
 
