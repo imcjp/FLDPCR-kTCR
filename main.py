@@ -43,7 +43,7 @@ def runFLDPCR(configs):
     dpcr_model = configs["dpcr_model"]
 
     message = "\n[WELCOME] Unfolding configurations...!"
-    print(message);
+    print(message)
     for key in configs:
         print({key: configs[key]});
 
@@ -118,6 +118,22 @@ if __name__ == '__main__':
             #   kTCR_k5, kTCR model with k==5
             #   kTCR_k8, kTCR model with k==8
             #   kTCR_k10, kTCR model with k==10
+            # For Ablation experiments:
+            #   kTCR_k2_NoVOE, kTCR model without VOE for k==2
+            #   kTCR_k3_NoVOE, kTCR model without VOE for k==3
+            #   kTCR_k5_NoVOE, kTCR model without VOE for k==5
+            #   kTCR_k8_NoVOE, kTCR model without VOE for k==8
+            #   kTCR_k10_NoVOE, kTCR model without VOE for k==10
+            #   kTCR_k2_NoPBA, kTCR model without PBA for k==2
+            #   kTCR_k3_NoPBA, kTCR model without PBA for k==3
+            #   kTCR_k5_NoPBA, kTCR model without PBA for k==5
+            #   kTCR_k8_NoPBA, kTCR model without PBA for k==8
+            #   kTCR_k10_NoPBA, kTCR model without PBA for k==10
+            #   kTCR_k2_NoVOE_NoPBA, kTCR model without both of VOE and PBA for k==2
+            #   kTCR_k3_NoVOE_NoPBA, kTCR model without both of VOE and PBA for k==3
+            #   kTCR_k5_NoVOE_NoPBA, kTCR model without both of VOE and PBA for k==5
+            #   kTCR_k8_NoVOE_NoPBA, kTCR model without both of VOE and PBA for k==8
+            #   kTCR_k10_NoVOE_NoPBA, kTCR model without both of VOE and PBA for k==10
             'name': 'kTCR_k2',
             'args': {}  # Automatic setting by clientT and the DPCR model
         },
@@ -139,7 +155,26 @@ if __name__ == '__main__':
                 "kTCR_k3": {"T": clientT},
                 "kTCR_k5": {"T": clientT},
                 "kTCR_k8": {"T": clientT},
-                "kTCR_k10": {"T": clientT}
+                "kTCR_k10": {"T": clientT},
+                # For Ablation experiments:
+                # kTCR without VOE
+                "kTCR_k2_NoVOE": {"T": clientT},
+                "kTCR_k3_NoVOE": {"T": clientT},
+                "kTCR_k5_NoVOE": {"T": clientT},
+                "kTCR_k8_NoVOE": {"T": clientT},
+                "kTCR_k10_NoVOE": {"T": clientT},
+                # kTCR without PBA
+                "kTCR_k2_NoPBA": {"T": clientT},
+                "kTCR_k3_NoPBA": {"T": clientT},
+                "kTCR_k5_NoPBA": {"T": clientT},
+                "kTCR_k8_NoPBA": {"T": clientT},
+                "kTCR_k10_NoPBA": {"T": clientT},
+                # kTCR without both of VOE and PBA
+                "kTCR_k2_NoVOE_NoPBA": {"T": clientT},
+                "kTCR_k3_NoVOE_NoPBA": {"T": clientT},
+                "kTCR_k5_NoVOE_NoPBA": {"T": clientT},
+                "kTCR_k8_NoVOE_NoPBA": {"T": clientT},
+                "kTCR_k10_NoVOE_NoPBA": {"T": clientT}
                 }
     dtArgs = {"MNIST": {'model__name': 'CNN_Mnist'},
               "FashionMNIST": {'model__name': 'CNN_Mnist'},

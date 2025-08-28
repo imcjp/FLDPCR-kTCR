@@ -48,6 +48,18 @@ class PrivBudgetSolver:
         return PrivBudgetBean(h, N=N, k=k, solver=self)
 
 
+class SimplePrivacyBudget:
+    def __init__(self, h):
+        """
+        :param h: The height (start from 0)
+        """
+        self.h = h
+        self.pri_budget = 1.0 / (h + 1.0)
+
+    def get(self, i):
+        return self.pri_budget
+
+
 class PrivBudgetBean:
     def __init__(self, h, N=0, q=None, k=2, solver=None):
         """

@@ -20,7 +20,7 @@
 import numpy as np
 from dpcrpy.framework.dpcrMech import DpcrMech
 
-from dpcrpy.treeMethods.ktcr.private_budget import PrivBudgetSolver
+from dpcrpy.treeMethods.ktcr.private_budget import PrivBudgetSolver, SimplePrivacyBudget
 
 from dpcrpy.treeMethods.ktcr.utils.kary_math import node_count_of_t_release, lsd_k, node_pos_of_t_release, \
     k_digits_array, gen_strat_matrix
@@ -29,20 +29,20 @@ import os
 
 
 class KTCR(DpcrMech):
-    def __init__(self, h=1, N=1, k=2, noiMech=None, isInit=True):
+    def __init__(self, h=1, N=1, k=2, noiMech=None, isInit=True, withVOE=True, withPrivateBudget=True):
         super().__init__()
         self.k = k
         self.h = h
         self.N = N
         self.T = k ** h
+        self.withVOE = withVOE
         self.setNoiMech(noiMech)
-        solver = PrivBudgetSolver()
-
-        solver.set_cache(cacheFile=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/cache.json'))
-        if h==0:
-            print('dd')
-        self.gen = solver.solve(h, N, k)
-
+        if withPrivateBudget:
+            solver = PrivBudgetSolver()
+            solver.set_cache(cacheFile=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data/cache.json'))
+            self.gen = solver.solve(h, N, k)
+        else:
+            self.gen = SimplePrivacyBudget(h)
         if isInit:
             self.init()
         self.cache = {}
@@ -73,7 +73,7 @@ class KTCR(DpcrMech):
     def getL2Sens(self):
         return 1
 
-    def dpRelease(self, x):
+    def __dpRelease(self, x):
         if self.t == 0:
             for i in range(self.h + 1):
                 self.__init_buff_with_noise(i)
@@ -103,6 +103,34 @@ class KTCR(DpcrMech):
         sMse = self.noiMech.getMse() * sVif
         return (sNoi, sMse)
 
+    def __dpRelease_NoVOE(self, x):
+        if self.t == 0:
+            for i in range(self.h + 1):
+                self.__init_buff_with_noise(i)
+        self.t += 1
+        lp = lsd_k(self.t, self.k)
+        for i in range(len(self.buff)):
+            self.buff[i][0] += x
+        for j in range((self.k - 1) * lp):
+            self.stk.pop()
+        noiV, vif = self.buff[lp]
+        self.stk.append((noiV, vif))
+        if self.t < self.T:
+            for i in range(lp + 1):
+                self.__init_buff_with_noise(i)
+        sNoi = 0
+        sVif = 0
+        for (noi, vif) in self.stk:
+            sNoi += noi
+            sVif += vif
+        sMse = self.noiMech.getMse() * sVif
+        return (sNoi, sMse)
+
+    def dpRelease(self, x):
+        if self.withVOE:
+            return self.__dpRelease(x)
+        else:
+            return self.__dpRelease_NoVOE(x)
 
 class KTCRComp(DpcrMech):
     def getParamList(self):
@@ -118,10 +146,12 @@ class KTCRComp(DpcrMech):
         blkList.reverse()
         return blkList
 
-    def __init__(self, T=1, k=2, addtionT=0, noiMech=None, isInit=True):
+    def __init__(self, T=1, k=2, addtionT=0, noiMech=None, isInit=True, withVOE=True, withPrivateBudget=True):
         self.T = T
         self.k = k
         self.addtionT = addtionT
+        self.withPrivateBudget = withPrivateBudget
+        self.withVOE = withVOE
         self.blk = None
         self.blkList = self.getParamList()
         self.setNoiMech(noiMech)
@@ -156,7 +186,8 @@ class KTCRComp(DpcrMech):
 
     def dpRelease(self, x):
         if self.blk is None or self.blk.size() == self.j:
-            self.blk = KTCR(h=self.blkList[self.blkId][0], N=self.blkList[self.blkId][1], k=self.k)
+            self.blk = KTCR(h=self.blkList[self.blkId][0], N=self.blkList[self.blkId][1], k=self.k,
+                                withVOE=self.withVOE, withPrivateBudget=self.withPrivateBudget)
             self.blk.setNoiMech(self.noiMech)
             self.j = 0
             self.cumSum += self.lastRs

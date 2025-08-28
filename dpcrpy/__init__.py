@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##########################################################################
+import re
 
 from dpcrpy.framework.framework import dpCrFw
 import dpcrpy.framework.noiMech as noiMech
@@ -31,30 +32,18 @@ from dpcrpy.treeMethods.ktcr import KTCRComp
 ## The Tools of Continuous Data Release #################################################
 import dpcrpy.utils.bitOps as bitOps
 
-
-def kTCR_k2(T, addtionT=0):
-    return KTCRComp(T=T, k=2, addtionT=addtionT)
-
-
-def kTCR_k3(T, addtionT=0):
-    return KTCRComp(T=T, k=3, addtionT=addtionT)
-
-
-def kTCR_k5(T, addtionT=0):
-    return KTCRComp(T=T, k=5, addtionT=addtionT)
-
-
-def kTCR_k8(T, addtionT=0):
-    return KTCRComp(T=T, k=8, addtionT=addtionT)
-
-
-def kTCR_k10(T, addtionT=0):
-    return KTCRComp(T=T, k=10, addtionT=addtionT)
-
-
 def gen(name, args=None):
     if args is None:
-        md = eval(name)();
+        md = eval(name)()
     else:
-        md = eval(name)(**args);
-    return md;
+        match = re.match(r"kTCR_k(\d+)(?:_(NoVOE|NoPBA))?(?:_(NoVOE|NoPBA))?$", name)
+        if match:
+            args['k'] = int(match.group(1))
+            if '_NoVOE' in name:
+                args['withVOE'] = False
+            if '_NoPBA' in name:
+                args['withPrivateBudget'] = False
+            name = 'KTCRComp'
+        md = eval(name)(**args)
+    return md
+    
